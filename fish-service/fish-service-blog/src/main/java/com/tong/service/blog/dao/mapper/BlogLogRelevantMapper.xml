@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tong.service.blog.dao.proxy.BlogLogRelevantProxy">
+
+    <!-- 获取目录列表 -->
+    <select id="getCategoryList" resultType="com.tong.entity.blog.CategoryInfo">
+        SELECT
+            category_info_id categoryInfoId,
+            category_info_name categoryInfoName
+        FROM
+            category_info
+        WHERE
+            1 = 1
+            AND del_flag = 1
+            <if test="searchText != null and searchText != '' ">
+                AND category_info_name LIKE CONCAT('%',#{searchText},'%')
+            </if>
+            <if test="operatorId != null and operatorId != '' ">
+                AND create_operator_id = #{operatorId}
+            </if>
+    </select>
+
+    <!-- 插入目录信息 -->
+    <insert id="insertCategoryInfo" parameterType="com.tong.entity.blog.CategoryInfo">
+        INSERT INTO category_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryInfo.categoryInfoId != null">
+                category_info_id,
+            </if>
+            <if test="categoryInfo.categoryInfoName != null">
+                category_info_name,
+            </if>
+            <if test="categoryInfo.delFlag != null">
+                del_flag,
+            </if>
+            <if test="categoryInfo.createOperatorId != null">
+                create_operator_id,
+            </if>
+            <if test="categoryInfo.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryInfo.categoryInfoId != null">
+                #{categoryInfo.categoryInfoId},
+            </if>
+            <if test="categoryInfo.categoryInfoName != null">
+                #{categoryInfo.categoryInfoName},
+            </if>
+            <if test="categoryInfo.delFlag != null">
+                #{categoryInfo.delFlag},
+            </if>
+            <if test="categoryInfo.createOperatorId != null">
+                #{categoryInfo.createOperatorId},
+            </if>
+            <if test="categoryInfo.createTime != null">
+                #{categoryInfo.createTime},
+            </if>
+         </trim>
+    </insert>
+
+
+    <!-- 更新目录信息 -->
+    <update id="updateCategoryInfo" parameterType="com.tong.entity.blog.CategoryInfo">
+        UPDATE
+            category_info
+        <set>
+            <if test="categoryInfo.categoryInfoName != null">
+                category_info_name = #{categoryInfo.categoryInfoName},
+            </if>
+            <if test="categoryInfo.delFlag != null">
+                del_flag = #{categoryInfo.delFlag},
+            </if>
+        </set>
+        WHERE
+            category_info_id = #{categoryInfo.categoryInfoId}
+    </update>
+
+
+    <!-- 获取标签列表 -->
+    <select id="getTagList" resultType="com.tong.entity.blog.TagInfo">
+        SELECT
+            tag_info_id tagInfoId,
+            tag_info_name tagInfoName
+        FROM
+            tag_info
+        WHERE
+            1 = 1
+            AND del_flag = 1
+            <if test="searchText != null and searchText != '' ">
+                AND tag_info_name LIKE CONCAT('%', #{searchText}, '%')
+            </if>
+            <if test="categoryInfoId != null and categoryInfoId != '' ">
+                AND category_info_id = #{categoryInfoId}
+            </if>
+            <if test="operatorId != null and operatorId != '' ">
+                AND create_operator_id = #{operatorId}
+            </if>
+    </select>
+
+    <!-- 插入标签信息 -->
+    <insert id="insertTagInfo" parameterType="com.tong.entity.blog.TagInfo">
+        INSERT INTO tag_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tagInfo.tagInfoId != null">
+                tag_info_id,
+            </if>
+            <if test="tagInfo.tagInfoName != null">
+                tag_info_name,
+            </if>
+            <if test="tagInfo.coverImgUrl != null">
+                cover_img_url,
+            </if>
+            <if test="tagInfo.categoryInfoId != null">
+                category_info_id,
+            </if>
+            <if test="tagInfo.delFlag != null">
+                del_flag,
+            </if>
+            <if test="tagInfo.createOperatorId != null">
+                create_operator_id,
+            </if>
+
+            <if test="tagInfo.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tagInfo.tagInfoId != null">
+                #{tagInfo.tagInfoId},
+            </if>
+            <if test="tagInfo.tagInfoName != null">
+                #{tagInfo.tagInfoName},
+            </if>
+            <if test="tagInfo.coverImgUrl != null">
+                 #{tagInfo.coverImgUrl},
+            </if>
+            <if test="tagInfo.categoryInfoId != null">
+                #{tagInfo.categoryInfoId},
+            </if>
+            <if test="tagInfo.delFlag != null">
+                #{tagInfo.delFlag},
+            </if>
+            <if test="tagInfo.createOperatorId != null">
+                #{tagInfo.createOperatorId},
+            </if>
+            <if test="tagInfo.createTime != null">
+                #{tagInfo.createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新标签信息 -->
+    <update id="updateTagInfo" parameterType="com.tong.entity.blog.TagInfo">
+        UPDATE
+            tag_info
+        <set>
+            <if test="tagInfo.tagInfoName != null">
+                tag_info_name = #{tagInfo.tagInfoName},
+            </if>
+            <if test="tagInfo.coverImgUrl != null">
+                cover_img_url = #{tagInfo.coverImgUrl},
+            </if>
+            <if test="tagInfo.categoryInfoId != null">
+                category_info_id = #{tagInfo.categoryInfoId},
+            </if>
+            <if test="tagInfo.delFlag != null or tagInfo.delFlag == 0 ">
+                del_flag = #{tagInfo.delFlag},
+            </if>
+        </set>
+        WHERE
+            tag_info_id = #{tagInfo.tagInfoId}
+    </update>
+
+    <!-- ====================  文章信息 =================== -->
+    <!-- 获取文章列表 -->
+    <select id="getArticleList" resultType="com.tong.entity.blog.ArticleInfo">
+        SELECT
+            article_info_id articleInfoId,
+            article_title articleTitle,
+            description,
+            article_url articleUrl,
+            IFNULL(ai.cover_img_url,(SELECT ti.cover_img_url FROM tag_info ti WHERE ti.tag_info_id = ai.tag_info_id)) coverImgUrl,
+            category_info_id categoryInfoId,
+            (SELECT category_info_name FROM category_info ci WHERE ci.category_info_id = ai.category_info_id) categoryInfoName,
+            tag_info_id tagInfoId,
+            (SELECT tag_info_name FROM tag_info ti WHERE ti.tag_info_id = ai.tag_info_id) tagInfoName,
+            create_time createTime,
+            create_operator_id createOperatorId,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND is_fabulous = 1) popularity,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND is_collection = 1) collection,
+            last_update_time lastUpdateTime
+        FROM
+            article_info ai
+        WHERE
+            1 = 1
+            <if test="articleListVo.tabType == null or articleListVo.tabType == '' or articleListVo.tabType == 1">
+                AND del_flag = 1
+            </if>
+            <if test="articleListVo.tabType != null and articleListVo.tabType != '' and articleListVo.tabType == 2">
+                AND del_flag = 0
+            </if>
+            <if test="articleListVo.searchText != null and articleListVo.searchText != '' ">
+                AND article_title LIKE CONCAT('%', #{articleListVo.searchText},'%')
+            </if>
+            <if test="articleListVo.categoryInfoId != null and articleListVo.categoryInfoId != '' ">
+                AND category_info_id = #{articleListVo.categoryInfoId}
+            </if>
+            <if test="articleListVo.tagInfoId != null and articleListVo.tagInfoId != '' ">
+                AND tag_info_id = #{articleListVo.tagInfoId}
+            </if>
+            <if test="articleListVo.operatorId != null and articleListVo.operatorId != '' ">
+                AND create_operator_id = #{articleListVo.operatorId}
+            </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 插入文章信息 -->
+    <insert id="insertArticleInfo" parameterType="com.tong.entity.blog.ArticleInfo" useGeneratedKeys="true" keyProperty="articleInfoId">
+        INSERT INTO article_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="article.articleInfoId != null">
+                article_info_id,
+            </if>
+            <if test="article.articleTitle != null">
+                article_title,
+            </if>
+            <if test="article.description != null">
+                description,
+            </if>
+            <if test="article.articleContent != null">
+                article_content,
+            </if>
+            <if test="article.articleUrl != null">
+                article_url,
+            </if>
+            <if test="article.coverImgUrl != null">
+                cover_img_url,
+            </if>
+            <if test="article.albumId != null">
+                album_id,
+            </if>
+            <if test="article.categoryInfoId != null">
+                category_info_id,
+            </if>
+            <if test="article.tagInfoId != null">
+                tag_info_id,
+            </if>
+            <if test="article.createTime != null">
+                create_time,
+            </if>
+            <if test="article.createOperatorId != null">
+                create_operator_id,
+            </if>
+            <if test="article.delFlag != null">
+                del_flag,
+            </if>
+            <if test="article.delTime != null">
+                del_time,
+            </if>
+            <if test="article.lastUpdateTime != null">
+                last_update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="article.articleInfoId != null">
+                #{article.articleInfoId},
+            </if>
+            <if test="article.articleTitle != null">
+                #{article.articleTitle},
+            </if>
+            <if test="article.description != null">
+                #{article.description},
+            </if>
+            <if test="article.articleContent != null">
+                #{article.articleContent},
+            </if>
+            <if test="article.articleUrl != null">
+                #{article.articleUrl},
+            </if>
+            <if test="article.coverImgUrl != null">
+                #{article.coverImgUrl},
+            </if>
+            <if test="article.albumId != null">
+                #{article.albumId},
+            </if>
+            <if test="article.categoryInfoId != null">
+                #{article.categoryInfoId},
+            </if>
+            <if test="article.tagInfoId != null">
+                #{article.tagInfoId},
+            </if>
+            <if test="article.createTime != null">
+                #{article.createTime},
+            </if>
+            <if test="article.createOperatorId != null">
+                #{article.createOperatorId},
+            </if>
+            <if test="article.delFlag != null">
+                #{article.delFlag},
+            </if>
+            <if test="article.delTime != null">
+                #{article.delTime},
+            </if>
+            <if test="article.lastUpdateTime != null">
+                #{article.lastUpdateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新文章信息 -->
+    <update id="updateArticleInfo" parameterType="com.tong.entity.blog.ArticleInfo">
+        UPDATE
+            article_info
+        <set>
+            <if test="article.articleTitle != null">
+                article_title = #{article.articleTitle},
+            </if>
+            <if test="article.description != null">
+                description = #{article.description},
+            </if>
+            <if test="article.articleContent != null">
+                article_content = #{article.articleContent},
+            </if>
+            <if test="article.articleUrl != null">
+                article_url = #{article.articleUrl},
+            </if>
+            <if test="article.coverImgUrl != null">
+                cover_img_url = #{article.coverImgUrl},
+            </if>
+            <if test="article.albumId != null">
+                album_id = #{article.albumId},
+            </if>
+            <if test="article.categoryInfoId != null">
+                category_info_id = #{article.categoryInfoId},
+            </if>
+            <if test="article.tagInfoId != null">
+                tag_info_id = #{article.tagInfoId},
+            </if>
+            <if test="article.delFlag != null">
+                del_flag = #{article.delFlag},
+            </if>
+            <if test="article.delTime != null">
+                del_time = #{article.delTime},
+            </if>
+            <if test="article.lastUpdateTime != null">
+                last_update_time = #{article.lastUpdateTime},
+            </if>
+        </set>
+        WHERE
+            article_info_id = #{article.articleInfoId}
+    </update>
+
+    <!-- 获取文章详情 -->
+    <select id="getArticleInfo" resultType="com.tong.entity.blog.ArticleInfo">
+        SELECT
+            article_info_id articleInfoId,
+            article_title articleTitle,
+            description,
+            article_content articleContent,
+            article_url articleUrl,
+            category_info_id categoryInfoId,
+            (SELECT category_info_name FROM category_info ci WHERE ci.category_info_id = ai.category_info_id) categoryInfoName,
+            tag_info_id tagInfoId,
+            (SELECT tag_info_name FROM tag_info ti WHERE ti.tag_info_id = ai.tag_info_id) tagInfoName,
+            create_time createTime,
+            create_operator_id createOperatorId,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND is_fabulous = 1) popularity,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND is_collection = 1) collection,
+            (SELECT COUNT(1) &gt; 0 FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND is_fabulous = 1 AND create_operator_id = #{operatorId}) isFabulous,
+            (SELECT COUNT(1) &gt; 0 FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND is_collection = 1 AND create_operator_id = #{operatorId}) isCollection,
+            (SELECT personal_interest_id FROM personal_interest WHERE object_type = 1 AND article_info_id = ai.article_info_id AND create_operator_id = #{operatorId}) personalInterestId,
+            last_update_time lastUpdateTime
+        FROM
+            article_info ai
+        WHERE
+            1 = 1
+            AND del_flag = 1
+            <if test="articleInfoId != null and articleInfoId != '' ">
+                AND article_info_id = #{articleInfoId}
+            </if>
+        LIMIT 1
+    </select>
+
+    <!-- 获取统计数据 -->
+    <select id="getArticleStatistics" resultType="com.tong.entity.blog.ArticleStatistics">
+        SELECT
+            article.articleTotal,
+            category.categoryTotal,
+            tag.tagTotal
+        FROM
+            (
+                SELECT COUNT(1) articleTotal FROM article_info WHERE del_flag = 1
+            ) article,
+            (
+                SELECT COUNT(1) categoryTotal FROM category_info WHERE del_flag = 1
+            ) category,
+            (
+                SELECT COUNT(1) tagTotal FROM tag_info WHERE del_flag = 1
+            ) tag
+        WHERE 1 = 1
+    </select>
+
+    <!-- 文章生产线 -->
+    <select id="getArticleLine" resultType="com.tong.entity.blog.ArticleLine">
+        SELECT
+            article_info_id articleInfoId,
+            article_title articleTitle,
+            description,
+            create_time createTime
+        FROM
+            article_info
+        WHERE
+            del_flag = 1
+        ORDER BY create_time DESC
+    </select>
+</mapper>

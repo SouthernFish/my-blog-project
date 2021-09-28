@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tong.service.blog.dao.proxy.CommentFabulousProxy">
+
+    <!-- 插入评论 -->
+    <insert id="insertCommentInfo" parameterType="com.tong.entity.blog.CommentInfo">
+        INSERT INTO comment_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentInfo.commentId != null">
+                comment_id,
+            </if>
+            <if test="commentInfo.commentContent != null">
+                comment_content,
+            </if>
+            <if test="commentInfo.articleInfoId != null">
+                article_info_id,
+            </if>
+            <if test="commentInfo.fromPerson != null">
+                from_person,
+            </if>
+            <if test="commentInfo.isReply != null">
+                is_reply,
+            </if>
+            <if test="commentInfo.parentId != null">
+                parent_id,
+            </if>
+            <if test="commentInfo.replyCommentId != null">
+                reply_comment_id,
+            </if>
+            <if test="commentInfo.toPerson != null">
+                to_person,
+            </if>
+            <if test="commentInfo.auditStatus != null">
+                audit_status,
+            </if>
+            <if test="commentInfo.delFlag != null">
+                del_flag,
+            </if>
+            <if test="commentInfo.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentInfo.commentId != null">
+                #{commentInfo.commentId},
+            </if>
+            <if test="commentInfo.commentContent != null">
+                #{commentInfo.commentContent},
+            </if>
+            <if test="commentInfo.articleInfoId != null">
+                #{commentInfo.articleInfoId},
+            </if>
+            <if test="commentInfo.fromPerson != null">
+                #{commentInfo.fromPerson},
+            </if>
+            <if test="commentInfo.isReply != null">
+                #{commentInfo.isReply},
+            </if>
+            <if test="commentInfo.parentId != null">
+                #{commentInfo.parentId},
+            </if>
+            <if test="commentInfo.replyCommentId != null">
+                #{commentInfo.replyCommentId},
+            </if>
+            <if test="commentInfo.toPerson != null">
+                #{commentInfo.toPerson},
+            </if>
+            <if test="commentInfo.auditStatus != null">
+                #{commentInfo.auditStatus},
+            </if>
+            <if test="commentInfo.delFlag != null">
+                #{commentInfo.delFlag},
+            </if>
+            <if test="commentInfo.createTime != null">
+                #{commentInfo.createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新评论 -->
+    <update id="updateCommentInfo" parameterType="com.tong.entity.blog.CommentInfo">
+        UPDATE comment_info
+        <set>
+            <if test="commentInfo.auditStatus != null">
+                audit_status = #{commentInfo.auditStatus},
+            </if>
+            <if test="commentInfo.delFlag != null">
+                del_flag = #{commentInfo.delFlag},
+            </if>
+        </set>
+        WHERE comment_id = #{commentInfo.commentId}
+    </update>
+
+    <!-- 评论区 -->
+    <select id="getCommentCommunityInfo" resultType="com.tong.entity.blog.CommentCommunity">
+        SELECT
+            comment_id commentId,
+            comment_content commentContent,
+            article_info_id articleInfoId,
+            from_person fromPerson,
+            (SELECT IFNULL(avatar, '') FROM system_operator WHERE operator_id = ci.from_person) avatar,
+            (SELECT IFNULL(operator_name, IFNULL(operator_account, '')) FROM system_operator WHERE operator_id = ci.from_person) fromPersonName,
+            is_reply isReply,
+            parent_id parentId,
+            reply_comment_id replyCommentId,
+            to_person toPerson,
+            (SELECT IFNULL(operator_name, IFNULL(operator_account, '')) FROM system_operator WHERE operator_id = ci.to_person) toPersonName,
+            (SELECT COUNT(1) FROM comment_info WHERE parent_id = ci.comment_id AND del_flag = 1 AND audit_status = 1) replyCount,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 2 AND comment_id = ci.comment_id AND is_fabulous = 1) popularity,
+            (SELECT COUNT(1) &gt; 0 FROM personal_interest WHERE object_type = 2 AND comment_id = ci.comment_id AND is_fabulous = 1 AND create_operator_id = #{operatorId}) isFabulous,
+            (SELECT personal_interest_id FROM personal_interest WHERE object_type = 2 AND comment_id = ci.comment_id AND create_operator_id = #{operatorId}) personalInterestId,
+            create_time createTime
+        FROM
+            comment_info ci
+        WHERE
+            del_flag = 1
+            AND audit_status = 1
+            AND article_info_id = #{articleInfoId}
+            AND parent_id = #{parentId}
+        ORDER BY create_time DESC
+    </select>
+
+
+    <!-- 插入个人兴趣表 -->
+    <insert id="insertPersonalInterest" parameterType="com.tong.entity.blog.PersonalInterest">
+        INSERT INTO personal_interest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="personalInterest.personalInterestId != null">
+                personal_interest_id,
+            </if>
+            <if test="personalInterest.objectType != null">
+                object_type,
+            </if>
+            <if test="personalInterest.articleInfoId != null">
+                article_info_id,
+            </if>
+            <if test="personalInterest.commentId != null">
+                comment_id,
+            </if>
+            <if test="personalInterest.isFabulous != null">
+                is_fabulous,
+            </if>
+            <if test="personalInterest.isCollection != null">
+                is_collection,
+            </if>
+            <if test="personalInterest.createOperatorId != null">
+                create_operator_id,
+            </if>
+            <if test="personalInterest.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="personalInterest.personalInterestId != null">
+                #{personalInterest.personalInterestId},
+            </if>
+            <if test="personalInterest.objectType != null">
+                #{personalInterest.objectType},
+            </if>
+            <if test="personalInterest.articleInfoId != null">
+                #{personalInterest.articleInfoId},
+            </if>
+            <if test="personalInterest.commentId != null">
+                #{personalInterest.commentId},
+            </if>
+            <if test="personalInterest.isFabulous != null">
+                #{personalInterest.isFabulous},
+            </if>
+            <if test="personalInterest.isCollection != null">
+                #{personalInterest.isCollection},
+            </if>
+            <if test="personalInterest.createOperatorId != null">
+                #{personalInterest.createOperatorId},
+            </if>
+            <if test="personalInterest.createTime != null">
+                #{personalInterest.createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新个人兴趣表 -->
+    <update id="updatePersonalInterest" parameterType="com.tong.entity.blog.PersonalInterest">
+        UPDATE personal_interest
+        <set>
+            <if test="interest.isFabulous != null">
+                is_fabulous = #{interest.isFabulous},
+            </if>
+            <if test="interest.isCollection != null">
+                is_collection = #{interest.isCollection},
+            </if>
+        </set>
+        WHERE personal_interest_id = #{interest.personalInterestId}
+    </update>
+
+    <!-- 我的收藏 -->
+    <select id="getPersonalCollection" resultType="com.tong.entity.blog.PersonalCollection">
+        SELECT
+            pi.personal_interest_id personalInterestId,
+            pi.article_info_id articleInfoId,
+            ai.article_title articleTitle,
+            ci.category_info_Name categoryInfoName,
+            ti.tag_info_Name tagInfoName,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 1 AND article_info_id = pi.article_info_id AND is_fabulous = 1) popularity,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 1 AND article_info_id = pi.article_info_id AND is_collection = 1) collection
+        FROM
+            personal_interest pi
+            LEFT JOIN article_info ai ON ai.article_info_id = pi.article_info_id
+            LEFT JOIN category_info ci ON ci.category_info_id = ai.category_info_id
+            LEFT JOIN tag_info ti ON ti.tag_info_id = ai.tag_info_id
+        WHERE
+            pi.create_operator_id = #{operatorId}
+            AND pi.is_collection = 1
+    </select>
+
+    <!-- 我的留言 | 留言管理 -->
+    <select id="getPersonalComment" resultType="com.tong.entity.blog.PersonalComment">
+        SELECT
+            ci.comment_id commentId,
+            IFNULL(so.operator_name, IFNULL(so.operator_account, '')) operatorName,
+            ai.article_title articleTitle,
+            ci.comment_content commentContent,
+            ci.create_time createTime,
+            (SELECT COUNT(1) FROM personal_interest WHERE object_type = 2 AND comment_id = ci.comment_id AND is_fabulous = 1) popularity,
+            (SELECT COUNT(1) FROM comment_info WHERE parent_id = ci.comment_id AND del_flag = 1 AND audit_status = 1) replyCount
+        FROM
+            comment_info ci
+            LEFT JOIN system_operator so ON so.operator_id = ci.from_person
+            LEFT JOIN article_info ai ON ai.article_info_id = ci.article_info_id
+        WHERE
+            ci.del_flag = 1
+            <if test="operatorType == 1 and position == 1">
+                AND ci.audit_status = 0
+            </if>
+            <if test="operatorType == 1 and position == 2">
+                AND ci.from_person = #{operatorId}
+            </if>
+            <if test="operatorType == 2">
+                AND ci.audit_status = 1
+                AND ci.from_person = #{operatorId}
+            </if>
+    </select>
+</mapper>

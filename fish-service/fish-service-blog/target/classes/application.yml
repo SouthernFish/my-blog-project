@@ -1,0 +1,101 @@
+server:
+   port: 8086
+spring:
+   application:
+      name: blogService
+   profiles:
+      active: loc
+   datasource:
+      url: jdbc:mysql://121.41.1.176:3306/fish_blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+      username: root
+      password: KtEEtf7qrX7e!
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      druid:
+         max-active: 10
+         initialSize: 1
+         maxWait: 60000
+         minIdle: 1
+         timeBetweenEvictionRunsMillis: 60000
+         minEvictableIdleTimeMillis: 300000
+         validationQuery: select 'x'
+         testWhileIdle: true
+         testOnBorrow: false
+         testOnReturn: false
+         poolPreparedStatements: true
+         maxOpenPreparedStatements: 20
+         filters: stat,wall,slf4j
+   redis:
+#      host: 121.41.1.176
+      host: localhost
+      port: 6379
+      database: 1
+      timeout: 5000
+      lettuce:
+         pool:
+            max-active: 8
+            max-wait: -1
+            max-idle: 8
+            min-idle: 0
+
+
+   servlet:
+      multipart:
+         enabled: true
+         max-request-size: 50MB
+         max-file-size: 50MB
+management: # 健康监控
+   endpoints:
+      web:
+         exposure:
+            include: '*' #暴露所有端点
+   endpoint:
+      health:
+         show-details: always
+eureka:
+   #    fetchRegistry: false                      #表示是否从eureka服务器获得注册信息，生产配置为true
+   instance:
+      prefer-ip-address: true
+      instance-id: ${spring.cloud.client.ip-address}:${server.port}
+      lease-renewal-interval-in-seconds: 5 #默认是30s 表示eureka client发送心跳给server端的频率。如果在leaseExpirationDurationInSeconds后，server端没有收到client的心跳，则将摘除该instance
+      lease-expiration-duration-in-seconds: 10 #默认是90s 表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance
+   client:
+      register-with-eureka: true
+      serviceUrl:
+         defaultZone: http://127.0.0.1:8081/eureka/
+#pagehelper: #配置分页插件 pagehelper
+#   helperDialect: mysql
+#   reasonable: true
+#   supportMethodsArguments: true
+#   params: count=countSql
+
+#
+
+# mybatis lus   配置
+mybatis-plus:
+   configuration:
+      log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+      map-underscore-to-camel-case: true
+   global-config:
+      banner: false
+   mapper-locations: classpath*:/com/tong/service/blog/dao/mapper/*.xml
+
+ribbon:
+   eureka:
+      enabled: true #开始熔断
+
+#logging:
+#   config: /app/share/yuezhicloud/yuezhi-common-config/logback-spring.xml
+
+feign:
+   hystrix:
+      enabled: true #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+hystrix:
+   command:
+      default:
+         execution:
+            timeout:
+               enabled: true
+            isolation:
+               thread:
+                  timeoutInMilliseconds: 2000 #断路器超时时间，默认1000ms

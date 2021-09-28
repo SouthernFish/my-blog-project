@@ -1,0 +1,35 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: eurekaService
+
+eureka:
+  server:
+    enable-self-preservation: true              #是否允许开启自我保护模式
+    eviction-interval-timer-in-ms: 30000         #清理无效节点的时间间隔
+  instance:
+    prefer-ip-address: true
+    instance-id: localhost:${server.port}
+    hostname: localhost
+  #    lease-renewal-interval-in-seconds: 5         #默认是30s 表示eureka client发送心跳给server端的频率。如果在leaseExpirationDurationInSeconds后，server端没有收到client的心跳，则将摘除该instance
+#    lease-expiration-duration-in-seconds: 10     #默认是90s 表示eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance
+  client:
+    register-with-eureka: false
+    fetch-registry: false                   # 指示该客户端是否应从eureka服务器获取eureka注册表信息。
+    serviceUrl:
+      defaultZone: http://127.0.0.1:${server.port}/eureka/
+
+
+
+#logging:
+#  config: /app/share/yuezhicloud/yuezhi-common-config/logback-spring.xml
+
+
+
+
+
+
+
+

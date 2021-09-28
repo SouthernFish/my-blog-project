@@ -1,0 +1,14 @@
+com\tong\wxsdk\media\sendeneity\Articles.class
+com\tong\wxsdk\media\result\MediaJsonRespEntity.class
+com\tong\wxsdk\media\result\NewsImageJsonRespEntity.class
+com\tong\wxsdk\httputil\entity\SSLEntity.class
+com\tong\wxsdk\media\MediaManager.class
+com\tong\wxsdk\httputil\SendRequest.class
+com\tong\wxsdk\httputil\HttpRequestClient.class
+com\tong\wxsdk\Constant.class
+com\tong\wxsdk\result\WechatReturnCode.class
+com\tong\wxsdk\media\MediaType.class
+com\tong\wxsdk\result\BaseJsonRespEntity.class
+com\tong\wxsdk\media\sendeneity\NewsEntity.class
+com\tong\wxsdk\media\sendeneity\UpdateNewsEntity.class
+com\tong\wxsdk\httputil\HttpRequestClient$1.class

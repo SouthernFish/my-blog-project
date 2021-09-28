@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="fish-common-config" />
+        <module name="fish-basic-eureka" />
+        <module name="fish-common-wxsdk" />
+        <module name="fish-api-blog" />
+        <module name="blog-independence-service" />
+        <module name="southern-fish-blog" />
+        <module name="southern-fish-resume" />
+        <module name="fish-common-core" />
+        <module name="fish-common-entity" />
+        <module name="fish-service-blog" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

@@ -1,0 +1,73 @@
+server:
+   port: 8085
+
+spring:
+   application:
+      name: blogSingleService
+   profiles:
+      active: loc
+   main:
+      allow-bean-definition-overriding: true
+   jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      time-zone: GMT+8
+   datasource:
+      url: jdbc:mysql://121.41.1.176:33306/fish_blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: KtEEtf7_qrX7e
+#      url: jdbc:mysql://121.41.1.176:3306/fish_blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+#      username: root
+#      password: KtEEtf7qrX7e!
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      druid:
+         max-active: 10
+         initialSize: 1
+         maxWait: 60000
+         minIdle: 1
+         timeBetweenEvictionRunsMillis: 60000
+         minEvictableIdleTimeMillis: 300000
+         validationQuery: select 'x'
+         testWhileIdle: true
+         testOnBorrow: false
+         testOnReturn: false
+         poolPreparedStatements: true
+         maxOpenPreparedStatements: 20
+         filters: stat,wall,slf4j
+   redis:
+#      host: 121.41.1.176
+      host: localhost
+      port: 6379
+      database: 1
+      timeout: 5000
+      lettuce:
+         pool:
+            max-active: 8
+            max-wait: -1
+            max-idle: 8
+            min-idle: 0
+   servlet:
+      multipart:
+         enabled: true
+         max-request-size: 50MB
+         max-file-size: 50MB
+
+## 健康监控
+#management:
+#   endpoints:
+#      web:
+#         exposure:
+#            include: '*' #暴露所有端点
+#   endpoint:
+#      health:
+#         show-details: always
+
+# mybatis lus   配置
+mybatis-plus:
+   configuration:
+      log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+      map-underscore-to-camel-case: true
+   global-config:
+      banner: false
+   mapper-locations: classpath*:/com/tong/service/blog/dao/mapper/*.xml
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/fish-common/fish-common-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-common/fish-common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-common/fish-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-common/fish-common-wxsdk" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-common/fish-common-wxsdk/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-common/fish-common-wxsdk/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-independence/blog-independence-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-independence/blog-independence-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-service/fish-service-blog" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-service/fish-service-blog/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fish-service/fish-service-blog/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

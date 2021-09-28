@@ -1,0 +1,102 @@
+# 一、安装
+```
+npm install mavon-editor --save
+
+```
+
+# 二、在main.js中全局注册
+```
+//富文本
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
+Vue.use(mavonEditor)
+
+```
+
+# 三、vue中使用
+```
+<mavon-editor ref="md"
+               v-model="description"
+              :autofocus="false"
+               defaultOpen="preview"
+               :language="languageEditor"
+                @imgAdd="$imgAdd"/>
+
+data() {
+          return {
+            languageEditor:'zh-CN',//多语言显示富文本
+         }
+ }
+
+created:function () {
+          if(this.languageID==1){
+            this.languageEditor='zh-CN'
+          }else if(this.languageID==2){
+            this.languageEditor='en'
+          }else{
+            this.languageEditor='de'
+}
+
+methods：:function () {
+			//富文本上传图片
+            $imgAdd(pos, $file){
+              // 第一步.将图片上传到服务器.
+              var formdata = new FormData();
+              formdata.append('file', $file);
+              axios({
+                url: '/admin/sys-file/upload',
+                method: 'post',
+                data: formdata,
+                headers:this.headers,
+              }).then((res) => {
+                // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                console.log(res)
+                var url='http://minio.rfxxkj.com/lsfw/'+res.data.data.fileName;
+                this.$refs.md.$img2Url(pos, url);
+              })
+            },
+   }
+
+```
+
+
+这个富文本支持多语言化，用language属性控制，默认中文，暂支持 zh-CN: 中文简体 ， en: 英文 ， fr: 法语， pt-BR: 葡萄牙语， ru: 俄语， de: 德语， ja: 日语
+
+:autofocus="false"关闭自动聚焦富文本
+
+上传服务器的headers和url要自己配置修改下，上传成功的url也要根据自己的路径进行调整。这样图片才能正常显示不破图。
+
+# 四、md格式的文本的解析
+使用marked框架来解析。
+
+```
+npm install marked --save
+import marked from ‘marked‘
+<div v-html="readmeContent" ></div>
+
+//这里的newDate[0].content就是取出来的md格式的文本内容  
+this.readmeContent=marked(newData[0].content||‘‘,{
+   sanitize:true
+})
+
+```
+
+
+存在问题：现在纯粹的只是将其解析成了html文件，相应的样式查了下，可以用highlight.js，但折腾了好久都没引用成功，最后为了应急，只能自己手写样式了。等之后再仔细看看marked的官方文档再说…
+
+# 五、前端展示mavonEditor文本，如果四不成功可以使用五。
+安装完依赖后并在全局引入完，即可直接使用。对应的属性请详见API文档。
+
+```
+<mavon-editor :toolbars="markdownOption" :box-shadow="false" v-model="msg" :subfield="false" style="border: 0" preview-background="#FFF" default-open="preview"/>
+
+
+
+      markdownOption: {
+        toolbarsFlag: false,
+        subfield: false
+      },
+
+```
+https://github.com/hinesboy/mavonEditor/blob/master/README.md

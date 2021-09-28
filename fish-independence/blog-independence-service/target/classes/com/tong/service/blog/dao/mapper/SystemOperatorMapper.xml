@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tong.service.blog.dao.proxy.SystemOperatorProxy">
+
+    <!-- 获取操作员信息 -->
+    <select id="getOperatorByAccount" resultType="com.tong.entity.blog.SystemOperator">
+        SELECT
+			operator_id operatorId,
+			operator_account operatorAccount,
+			operator_pwd operatorPwd,
+			operator_name operatorName,
+			avatar,
+			signature,
+			operator_tel operatorTel,
+			operator_email operatorEmail,
+			operator_type operatorType,
+			sex,
+			birthday,
+			create_time createTime,
+			status,
+			del_flag delFlag
+		FROM
+			system_operator
+		WHERE
+		    del_flag = 1
+		    <if test="operatorType == 1">
+                AND operator_account = #{operatorAccount}
+            </if>
+            <if test="operatorType == 2">
+                AND operator_email = #{operatorAccount}
+            </if>
+            <if test="seniorOperatorId != null ">
+                AND senior_operator_id = #{seniorOperatorId}
+            </if>
+    </select>
+
+    <!-- 根据ID获取用户的基本信息 -->
+    <select id="getOperatorById" resultType="com.tong.entity.blog.LoginUserInfo">
+        SELECT
+            operator_id operatorId,
+            operator_name operatorName,
+            avatar,
+            signature,
+            operator_tel operatorTel,
+            operator_email operatorEmail,
+            (SELECT popularity FROM blog_popularity WHERE blog_popularity_id = #{operatorId}) popularity
+        FROM
+            system_operator
+        WHERE
+            del_flag = 1
+            AND operator_id = #{operatorId}
+    </select>
+
+    <!-- 插入登录日志 -->
+    <insert id="saveLoginLog" parameterType="com.tong.entity.blog.SystemOperator">
+        INSERT INTO log_login_operator (
+            operator_id,
+            login_account,
+            login_name,
+            in_out,
+            is_success,
+            remark
+        )
+        VALUES
+        (
+            #{operator.operatorId},
+            #{operator.operatorAccount},
+            #{operator.operatorName},
+            #{isOut},
+            #{isSuccess},
+            #{remark}
+        )
+    </insert>
+
+    <!-- 修改操作员信息 -->
+    <update id="updateOperatorById" parameterType="com.tong.entity.blog.SystemOperator">
+        UPDATE
+            system_operator
+        <set>
+            <if test="operator.birthday != null">
+                birthday = #{operator.birthday},
+            </if>
+            <if test="operator.operatorPwd != null">
+                operator_pwd = #{operator.operatorPwd},
+            </if>
+            <if test="operator.operatorName != null">
+                operator_name = #{operator.operatorName},
+            </if>
+            <if test="operator.avatar != null">
+                avatar = #{operator.avatar},
+            </if>
+            <if test="operator.signature != null">
+                signature = #{operator.signature},
+            </if>
+            <if test="operator.sex != null">
+                sex = #{operator.sex},
+            </if>
+            <if test="operator.status != null">
+                status = #{operator.status},
+            </if>
+            <if test="operator.delFlag != null">
+                del_flag = #{operator.delFlag},
+            </if>
+        </set>
+        WHERE operator_id = #{operator.operatorId}
+    </update>
+
+    <!-- 添加操作员 -->
+    <insert id="saveSystemOperator" keyColumn="operator_id" keyProperty="operatorId"  parameterType="com.tong.entity.blog.SystemOperator" useGeneratedKeys="true">
+        INSERT INTO system_operator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operator.operatorId != null">
+                operator_id,
+            </if>
+            <if test="operator.birthday != null">
+                birthday,
+            </if>
+            <if test="operator.operatorAccount != null">
+                operator_account,
+            </if>
+            <if test="operator.operatorPwd != null">
+                operator_pwd,
+            </if>
+            <if test="operator.seniorOperatorId != null">
+                senior_operator_id,
+            </if>
+            <if test="operator.operatorName != null">
+                operator_name,
+            </if>
+            <if test="operator.avatar != null">
+                avatar,
+            </if>
+            <if test="operator.signature != null">
+                signature,
+            </if>
+            <if test="operator.operatorTel != null">
+                operator_tel,
+            </if>
+            <if test="operator.operatorEmail != null">
+                operator_email,
+            </if>
+            <if test="operator.wx_unionid != null">
+                wx_unionid,
+            </if>
+            <if test="operator.qq_openid != null">
+                qq_openid,
+            </if>
+            <if test="operator.operatorType != null">
+                operator_type,
+            </if>
+            <if test="operator.sex != null">
+                sex,
+            </if>
+            <if test="operator.createTime != null">
+                create_time,
+            </if>
+            <if test="operator.status != null">
+                status,
+            </if>
+            <if test="operator.delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operator.operatorId != null">
+                #{operator.operatorId},
+            </if>
+            <if test="operator.birthday != null">
+                #{operator.birthday},
+            </if>
+            <if test="operator.operatorAccount != null">
+                #{operator.operatorAccount},
+            </if>
+            <if test="operator.operatorPwd != null">
+                #{operator.operatorPwd},
+            </if>
+            <if test="operator.seniorOperatorId != null">
+                #{operator.seniorOperatorId},
+            </if>
+            <if test="operator.operatorName != null">
+                #{operator.operatorName},
+            </if>
+            <if test="operator.avatar != null">
+                #{operator.avatar},
+            </if>
+            <if test="operator.signature != null">
+                #{operator.signature},
+            </if>
+            <if test="operator.operatorTel != null">
+                #{operator.operatorTel},
+            </if>
+            <if test="operator.operatorEmail != null">
+                #{operator.operatorEmail},
+            </if>
+            <if test="operator.wx_unionid != null">
+                #{operator.wx_unionid},
+            </if>
+            <if test="operator.qq_openid != null">
+                #{operator.qq_openid},
+            </if>
+            <if test="operator.operatorType != null">
+                #{operator.operatorType},
+            </if>
+            <if test="operator.sex != null">
+                #{operator.sex},
+            </if>
+            <if test="operator.createTime != null">
+                #{operator.createTime},
+            </if>
+            <if test="operator.status != null">
+                #{operator.status},
+            </if>
+            <if test="operator.delFlag != null">
+                #{operator.delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 增加人气值 -->
+    <update id="updateBlogPopularity">
+        UPDATE blog_popularity
+        SET popularity = popularity + 1
+        WHERE blog_popularity_id = #{blogPopularityId}
+    </update>
+
+</mapper>
