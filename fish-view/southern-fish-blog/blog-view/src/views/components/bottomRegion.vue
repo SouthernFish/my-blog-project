@@ -12,7 +12,7 @@
       <div>
           托管于<a href="https://github.com/southernfish/blog-view" target="_blank">GitHub</a>. 
           <a href="https://www.aliyun.com/?spm=a2c49.11131515.0.0.5Z9AkR" target="_blank">阿里云</a> 提供静态文件云存储服务. 
-          <a href="https://docs.docker.com/" target="_blank">Docker Documentation</a> 提供环境部署参考. 
+          <a href="https://beian.miit.gov.cn" target="_blank">备案信息</a> 渝ICP备2021010405号.
           <a href="https://www.cloudxns.net/Order/index.html" target="_blank">CloudXNS</a> 提供 DNS 解析服务.
       </div>
       <div>
