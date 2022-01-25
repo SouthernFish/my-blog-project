@@ -19,5 +19,8 @@
         <module name="fish-service-blog" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="southern-fish-bill" target="9" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,0 +1,77 @@
+<template>
+  <div class="main-container">
+    第一个饼图
+
+    第二个折线图
+    <vab-chart
+      :autoresize="true"
+      theme="vab-echarts-theme"
+      :options="fwl" :style="{width: '100%',height:'350px'}"
+    />
+  </div>
+</template>
+
+
+<script>
+import VabChart from '@/plugins/echart'
+
+export default {
+  name: "StatisticsIndex",
+  props: {
+
+  },
+  data() {
+    return {
+      fwl: {
+        grid: {
+          top: '4%',
+          left: '2%',
+          right: '9%',
+          bottom: '8%',
+          containLabel: true,
+        },
+        // title: { text: '浏览次数趋势' },
+        xAxis: {
+          type: 'category',
+          data: []
+        },
+        yAxis: {
+          type: 'value',
+          splitLine: {
+            lineStyle: {
+              // 使用深浅的间隔色
+              color: ["#fff"],
+              height: 200
+            },
+          },
+        },
+        series: [{
+          data: [],
+          type: 'line',
+          smooth: true
+        }]
+      },
+    };
+  },
+  setup() {},
+  methods: {
+    // 折线图
+    getVal(dateType) {
+      // api.statisticalDataByTime({dateType: dateType}).then(res => {
+      //   this.fwl.series[0].data = [];
+      //   this.fwl.xAxis.data = [];
+      //   let data = res.data;
+      //   for (let i = 0; i < data.length; i++) {
+      //     this.fwl.series[0].data.push(data[i].totalVisitCount);
+      //     this.fwl.xAxis.data.push(data[i].thatTime)
+      //   }
+      // })
+    },
+
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

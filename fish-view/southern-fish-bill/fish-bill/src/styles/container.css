@@ -1,0 +1,24 @@
+/* 整页 */
+html, body, #appId, .el-container {
+  height: 100%;
+}
+
+/* .main-container {
+  border: 1px solid red;
+} */
+
+.el-header {
+  opacity: 0.8;
+}
+
+html body {
+  padding-right:0 !important;
+  overflow: auto !important;
+  margin:0;
+  padding:0;
+  border:0;
+}
+
+.el-header, .el-footer, .el-main {
+  padding: 0px;
+}
